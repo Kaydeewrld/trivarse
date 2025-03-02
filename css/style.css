@@ -2671,7 +2671,7 @@
 
 @media (min-width: 1024px) {
   .timed-tabs-and-content-block .image-div {
-    width: 66.666667%;
+    width: 51.66667%;
     padding-bottom: 0px;
   }
 }
@@ -2693,7 +2693,7 @@
 
 @media (min-width: 1024px) {
   .timed-tabs-and-content-block .copy-div {
-    width: 33.333333%;
+    width: 48.333333%;
   }
 }
 
