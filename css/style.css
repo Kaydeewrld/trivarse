@@ -1,31 +1,4 @@
-/*
- * Theme Name: MANTL 2023
- * Theme URI: https://chekcreative.com/
- * Author: Chek Creative
- * Author URI: https://chekcreative.com/
- * Description: 2023 updated theme for MANTL created by Chek Creative.
- * Version: 1.0.102
- * Text Domain: mantl-2023
- * 
- * Loosely forked from _s.
- * _s is based on Underscores https://underscores.me/, (C) 2012-2017 Automattic, Inc.
- * Underscores is distributed under the terms of the GNU GPL v2 or later.
- * 
- * Normalizing styles have been helped along thanks to the fine work of
- * Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
- */
 
-/*--------------------------------------------------------------
->>> TABLE OF CONTENTS:
-----------------------------------------------------------------
-# Fonts
-# Tailwind
-# Custom Components
---------------------------------------------------------------*/
-
-/*--------------------------------------------------------------
-# Import Block CSS Files
---------------------------------------------------------------*/
 
 .card-stats-block {
   position: relative;

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Invoicing System</title>
+    <style>
+        /* Inline CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+
+        header p {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        #currentDate,
+        #currentTime {
+            font-weight: 500;
+            color: #007bff;
+        }
+
+        .product-selection {
+            margin: 20px auto;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+        }
+
+        .product-selection label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .product-selection input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        .product-selection input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        #addProduct {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #addProduct:hover {
+            background-color: #0056b3;
+        }
+
+        .invoice {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .invoice h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 500;
+        }
+
+        #totalAmount {
+            font-size: 18px;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        #printInvoice {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #printInvoice:hover {
+            background-color: #218838;
+        }
+
+        .remove-item,
+        .edit-item {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .edit-item {
+            background-color: #007bff;
+        }
+
+        .remove-item:hover {
+            background-color: #cc0000;
+        }
+
+        .edit-item:hover {
+            background-color: #0056b3;
+        }
+
+        /* Searchable Dropdown */
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        #searchProduct {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        #searchProduct:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        #productList {
+            display: none;
+            position: absolute;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #productList option {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #productList option:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: #fff;
+                font-size: 12px;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 0;
+                width: 100%;
+            }
+
+            .product-selection,
+            #addProduct,
+            #printInvoice,
+            .remove-item,
+            .edit-item {
+                display: none;
+            }
+
+            .invoice {
+                width: 100%;
+                box-shadow: none;
+                padding: 0;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            #totalAmount {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="logo.png" alt="Store Logo" class="logo">
+            <h1>Store Name</h1>
+            <p>Store Address</p>
+            <p>Current Date: <span id="currentDate"></span></p>
+            <p>Current Time: <span id="currentTime"></span></p>
+        </header>
+
+        <div class="product-selection">
+            <div class="search-container">
+                <input type="text" id="searchProduct" placeholder="Search for a product...">
+                <select id="productList" size="5">
+                    <option value="1000">Cappuccino - ₦1,000</option>
+                    <option value="1200">Latte - ₦1,200</option>
+                    <option value="1500">Espresso - ₦1,500</option>
+                    <option value="800">Americano - ₦800</option>
+                    <option value="900">Mocha - ₦900</option>
+                    <option value="1100">Macchiato - ₦1,100</option>
+                    <option value="1300">Flat White - ₦1,300</option>
+                    <option value="700">Black Coffee - ₦700</option>
+                    <option value="1600">Iced Coffee - ₦1,600</option>
+                    <option value="1400">Cold Brew - ₦1,400</option>
+                    <option value="1000">Frappuccino - ₦1,000</option>
+                    <option value="1200">Affogato - ₦1,200</option>
+                </select>
+            </div>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" min="1" value="1">
+
+            <button id="addProduct">Add Product</button>
+        </div>
+
+        <div class="invoice">
+            <h2>Invoice</h2>
+            <table id="invoiceTable">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be added here dynamically -->
+                </tbody>
+            </table>
+            <p>Total Amount: <span id="totalAmount">₦0.00</span></p>
+            <button id="printInvoice">Print Invoice</button>
+        </div>
+    </div>
+
+    <script>
+        // Inline JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchProduct = document.getElementById('searchProduct');
+            const productList = document.getElementById('productList');
+            const quantityInput = document.getElementById('quantity');
+            const addProductButton = document.getElementById('addProduct');
+            const invoiceTableBody = document.querySelector('#invoiceTable tbody');
+            const totalAmountSpan = document.getElementById('totalAmount');
+            const printInvoiceButton = document.getElementById('printInvoice');
+            const currentDateSpan = document.getElementById('currentDate');
+            const currentTimeSpan = document.getElementById('currentTime');
+
+            let totalAmount = 0;
+
+            // Function to format numbers as currency in Naira
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                    minimumFractionDigits: 2
+                }).format(amount);
+            }
+
+            // Function to update date and time
+            function updateDateTime() {
+                const now = new Date();
+                const date = now.toLocaleDateString();
+                const time = now.toLocaleTimeString();
+                currentDateSpan.textContent = date;
+                currentTimeSpan.textContent = time;
+            }
+
+            // Update date and time every second
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // Searchable Dropdown
+            searchProduct.addEventListener('input', function() {
+                const searchTerm = searchProduct.value.toLowerCase();
+                const options = productList.querySelectorAll('option');
+                let hasMatches = false;
+
+                options.forEach(option => {
+                    const text = option.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        option.style.display = 'block';
+                        hasMatches = true;
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+
+                if (hasMatches) {
+                    productList.style.display = 'block';
+                } else {
+                    productList.style.display = 'none';
+                }
+            });
+
+            productList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'OPTION') {
+                    searchProduct.value = e.target.textContent;
+                    productList.style.display = 'none';
+                }
+            });
+
+            // Function to remove an item from the invoice
+            function removeItem(button, price, quantity) {
+                const row = button.closest('tr');
+                const itemTotal = price * quantity;
+                totalAmount -= itemTotal;
+                totalAmountSpan.textContent = formatCurrency(totalAmount);
+                row.remove();
+            }
+
+            // Function to edit an item in the invoice
+            function editItem(button, row, priceCell, totalCell) {
+                const newQuantity = prompt('Enter new quantity:', row.cells[1].textContent);
+                if (newQuantity && !isNaN(newQuantity)) {
+                    const price = parseFloat(priceCell.textContent.replace(/[^0-9.]/g, ''));
+                    const oldQuantity = parseInt(row.cells[1].textContent);
+                    const newTotal = price * newQuantity;
+
+                    row.cells[1].textContent = newQuantity;
+                    totalCell.textContent = formatCurrency(newTotal);
+
+                    totalAmount += (newTotal - (price * oldQuantity));
+                    totalAmountSpan.textContent = formatCurrency(totalAmount);
+                }
+            }
+
+            // Add product to invoice
+            addProductButton.addEventListener('click', function() {
+                const selectedProduct = searchProduct.value;
+                const selectedOption = Array.from(productList.options).find(option => option.textContent === selectedProduct);
+                if (!selectedOption) {
+                    alert('Please select a valid product.');
+                    return;
+                }
+
+                const price = parseFloat(selectedOption.value);
+                const quantity = parseInt(quantityInput.value);
+                const total = price * quantity;
+
+                // Create a new row for the invoice table
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${selectedProduct}</td>
+                    <td>${quantity}</td>
+                    <td>${formatCurrency(price)}</td>
+                    <td>${formatCurrency(total)}</td>
+                    <td>
+                        <button class="edit-item">Edit</button>
+                        <button class="remove-item">Remove</button>
+                    </td>
+                `;
+
+                // Add the row to the invoice table
+                invoiceTableBody.appendChild(newRow);
+
+                // Update the total amount
+                totalAmount += total;
+                totalAmountSpan.textContent = formatCurrency(totalAmount);
+
+                // Add event listeners to the edit and remove buttons
+                const editButton = newRow.querySelector('.edit-item');
+                const removeButton = newRow.querySelector('.remove-item');
+                const priceCell = newRow.cells[2];
+                const totalCell = newRow.cells[3];
+
+                editButton.addEventListener('click', function() {
+                    editItem(editButton, newRow, priceCell, totalCell);
+                });
+
+                removeButton.addEventListener('click', function() {
+                    removeItem(removeButton, price, quantity);
+                });
+
+                // Reset quantity and search input
+                quantityInput.value = 1;
+                searchProduct.value = '';
+                productList.style.display = 'none';
+            });
+
+            // Print invoice
+            printInvoiceButton.addEventListener('click', function() {
+                window.print();
+            });
+        });
+    </script>
+</body>
+</html>
